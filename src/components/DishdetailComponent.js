@@ -17,7 +17,7 @@ function RenderDish({dish}){
 }
 
 function formatDate(date){
-    const newDate = new Intl.DateTimeFormat('default', {
+    const newDate = new Intl.DateTimeFormat('en-US', {
         year: 'numeric',
         month: 'short',
         day: '2-digit',
@@ -44,8 +44,8 @@ class CommentForm extends Component{
     }
 
     handleSubmit(values){
-        console.log("Current state is "+JSON.stringify(values));
-        alert("Current state is "+JSON.stringify(values));
+        this.toggleModal();
+        this.props.addComment(this.props.dishId,values.rating,values.author,values.comment);
     }
 
     render(){
@@ -104,7 +104,7 @@ class CommentForm extends Component{
     }
 }
 
-function RenderComments({comments}){
+function RenderComments({comments, addComment, dishId}){
     if(comments == null)
         return (<div></div>);
     else{
@@ -123,7 +123,7 @@ function RenderComments({comments}){
                 <h4>Comments</h4>
                 <ul className="list-unstyled">
                     {dishComments}
-                    <CommentForm />
+                    <CommentForm dishId={dishId} addComment={addComment}/>
                 </ul>
             </div>
         );
@@ -151,7 +151,10 @@ function DishDetail(props){
                     <div className="col-12 col-md-5 m-1">
                         <RenderDish dish={props.dish} />
                     </div>
-                    <RenderComments comments = {props.comments} />
+                    <RenderComments comments = {props.comments} 
+                        addComment={props.addComment}
+                        dishId={props.dish.id}
+                    />
                 </div>
             </div>
         );
